@@ -1,13 +1,15 @@
 import express from 'express';
 import mongoose from 'mongoose';
 import routes from './routes/routes';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 class App{
 
     constructor(){
         this.server = express();
-
-        mongoose.connect('mongodb://172.19.150.184:27017/planetatur',{
+        mongoose.connect(process.env.DATABASE_CONNECTION,{
             useNewUrlParser: true,
             useUnifiedTopology: true,
             useFindAndModify: false
