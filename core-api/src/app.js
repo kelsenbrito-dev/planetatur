@@ -9,6 +9,8 @@ class App{
 
     constructor(){
         this.server = express();
+
+        //conexão com o banco de dados
         mongoose.connect(process.env.DATABASE_CONNECTION,{
             useNewUrlParser: true,
             useUnifiedTopology: true,
