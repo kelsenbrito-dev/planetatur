@@ -1,5 +1,6 @@
 @baseUrl = http://localhost:3333
 @token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZmM4NmM1MmE2NWU3YTQ3OWNiYWIzMzUiLCJpYXQiOjE2MDY5NzA0ODQsImV4cCI6MTYwNzA1Njg4NH0.ZANisozu1Ajm95cOPLKrdHgbfDl26k4EkmyEtiW5F1U
+@idUsuario = 5fc5c709e03ae13740f6f6a7
 
 ### lista usuario
 GET {{baseUrl}}/usuario
@@ -7,12 +8,12 @@ Authorization: Bearer {{token}}
 
 
 ### get usuario
-GET {{baseUrl}}/usuario/5fc5c709e03ae13740f6f6a7
+GET {{baseUrl}}/usuario/{{idUsuario}}
 Authorization: Bearer {{token}}
 
 
 ### destroy usuario
-DELETE {{baseUrl}}/usuario/5fc6ddd9fbe711430cecf804
+DELETE {{baseUrl}}/usuario/{{idUsuario}}
 Authorization: Bearer {{token}}
 
 
@@ -22,8 +23,8 @@ Authorization: Bearer {{token}}
 Content-Type: application/json
 
 {
-    "nome": "Geraldo Brito",
-    "email": "geraldo.brito@gmail.com",
+    "nome": "Fatima Brito",
+    "email": "fatima.brito@gmail.com",
     "senha": "123456"
 }
 

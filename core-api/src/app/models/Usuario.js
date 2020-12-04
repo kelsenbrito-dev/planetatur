@@ -3,9 +3,18 @@ import bcrypt from 'bcryptjs';
 
 /** Schema para negócios relacionados ao usuário **/
 const UsuarioSchema = new Schema({
-    nome: String,
-    email: String,
-    senha: String
+    nome: {
+        type: String,
+        required: [true, 'Informe o nome do usuário']
+    },
+    email: {
+        type: String,
+        required: [true, 'Informe o e-mail do usuário']
+    },
+    senha: {
+        type: String,
+        required: [true, 'Informe a senha do usuário']
+    },
 });
 
 //local para criação de métodos
@@ -51,15 +60,6 @@ UsuarioSchema.static({
     saveAndUpdate: async function(data){
         let usuario;
         try {
-
-            //valida os dados para gravação/alteração
-            if(data.nome == null || data.email == null
-                || data.nome == undefined || data.email == undefined
-                || data.senha == undefined || data.senha == undefined
-                ){
-                throw new Error('Dados inválidos');
-            }
-
             //cria o hash para a senha
             data.senha = await bcrypt.hash(data.senha, 8);
             if(data._id){
@@ -81,7 +81,7 @@ UsuarioSchema.static({
         }
 
         //recupera o usuário
-        let usuario = this.getById(id);
+        let usuario = this.get(id);
         if(!usuario){
             throw new Error('Usuário inexistente.');
         }
