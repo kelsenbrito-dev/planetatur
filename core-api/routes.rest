@@ -1,6 +1,6 @@
 @baseUrl = http://localhost:3333
-@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZmM4NmM1MmE2NWU3YTQ3OWNiYWIzMzUiLCJpYXQiOjE2MDY5NzA0ODQsImV4cCI6MTYwNzA1Njg4NH0.ZANisozu1Ajm95cOPLKrdHgbfDl26k4EkmyEtiW5F1U
-@idUsuario = 5fc5c709e03ae13740f6f6a7
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZmNjNGJiZWE1ZjE2ZjJmZmNiMDRhZWYiLCJpYXQiOjE2MDcyMjczMjQsImV4cCI6MTYwNzIzMDkyNH0.xXezDyLnkLOVuyhQLMOYK6xaJR-I4yNrzmEpsKxfYL8
+@idUsuario = 5fcc51f6de5c52288c46bb3d
 
 ### lista usuario
 GET {{baseUrl}}/usuario
@@ -23,21 +23,21 @@ Authorization: Bearer {{token}}
 Content-Type: application/json
 
 {
-    "nome": "Fatima Brito",
-    "email": "fatima.brito@gmail.com",
+    "nome": "Tati Veil",
+    "email": "tativeillllll@gmail.com",
     "senha": "123456"
 }
 
 
 ### alterar usuário
-POST {{baseUrl}}/usuario
+PUT {{baseUrl}}/usuario
 Authorization: Bearer {{token}}
 Content-Type: application/json
 
 {
-    "_id": "5fc9320de5f50c0aac46b18a",
-    "nome": "Tati Veil",
-    "email": "tativeil@gmail.com",
+    "_id": "5fcc4bb7a5f16f2ffcb04aee",
+    "nome": "Fátima Brito",
+    "email": "fatima.brito@gmail.com",
     "senha": "123456"
 }
 
@@ -47,7 +47,7 @@ POST {{baseUrl}}/usuario/authenticate
 Content-Type: application/json
 
 {
-    "email": "geraldo.brito@gmail.com",
+    "email": "kelsen.brito@gmail.com",
     "senha": "123456"
 }
 

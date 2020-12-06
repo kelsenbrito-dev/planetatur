@@ -12,9 +12,10 @@ routes.get('/', (req, res) => {
 routes.post('/usuario/authenticate', UsuarioController.authenticate);
 routes.use(authMiddleware); //obrigatório a validação do token a partir daqui
 routes.get('/usuario', UsuarioController.index);
+routes.get('/usuario/:id', UsuarioController.show);
 routes.post('/usuario', UsuarioController.store);
-routes.get('/usuario/:id', UsuarioController.get);
-routes.delete('/usuario/:id', UsuarioController.destroy);
+routes.put('/usuario', UsuarioController.update);
+routes.delete('/usuario/:id', UsuarioController.delete);
 
 //Perfil
 
