@@ -17,6 +17,10 @@ const UsuarioSchema = new Schema({
         type: String,
         required: [true, 'Informe a senha do usuário']
     },
+    root: {
+        type: Boolean,
+        default: false
+    }
 });
 
 //local para criação de métodos
@@ -31,14 +35,16 @@ UsuarioSchema.static({
     },
 
     //recupera o usuário pelo identificador
-    show: async function(_id){
+    show: async function(data){
+        const { id } = data;
+
         //valida o identificador
-        if(_id == null || _id == undefined){
-            return { message: 'O campo identificador é obrigatório' };
+        if(id == null || id == undefined){
+            return { message: 'O identificador do usuário é obrigatório' };
         }
 
         //recupera o usuário
-        return await this.findOne({ _id }).then((usuario) => {
+        return await this.findOne({ _id: id }).then((usuario) => {
             if(!usuario){
                 return { message: 'Usuário não encontrado.'}
             };
@@ -51,8 +57,10 @@ UsuarioSchema.static({
     //realiza a manutenção dos dados do usuário
     store: async function(data){
         try {
+            const { email } = data;
+
             //valida se já existe o usuário
-            const usuario = await this.findOne({ 'email': data.email });
+            const usuario = await this.findOne({ email });
             if(usuario){
                 return { message: 'Usuário já cadastrado.'};
             }
@@ -68,11 +76,21 @@ UsuarioSchema.static({
     },
 
     //realiza a manutenção dos dados do usuário
-    update: async function(data){
+    update: async function(data, token){
         try {
             //cria o hash para a senha
             data.senha = await bcrypt.hash(data.senha, 8);
             if(data._id){
+                //valida se o usuário é root para alterar atributo root
+                if(!token.root){
+                    data = {
+                        _id: data._id,
+                        nome: data.nome,
+                        email: data.email,
+                        senha: data.senha
+                    };
+                }
+
                 return await this.findOneAndUpdate({ _id : data._id }, data, { new : true }).then((usuario) => {
                     if(!usuario){
                         return { message: 'Usuário não encontrado.'}
@@ -82,20 +100,22 @@ UsuarioSchema.static({
                     return error;
                 });
             }
-            return;
+            return { message: 'O identificador do usuário é obrigatório' };
         } catch (error) {
             return error;
         }
     },
 
     //exclui o usuário pelo identificador
-    delete: async function(_id){
+    delete: async function(data){
+        const { id } = data;
         //valida o identificador
-        if(_id == null || _id == undefined){
-            return { message: 'O campo identificador é obrigatório' };
+        if(id == null || id == undefined){
+            return { message: 'O identificador do usuário é obrigatório' };
         }
+
         //excluir o usuário
-        return await this.findOneAndDelete({ '_id' : _id }).then((usuario) => {
+        return await this.findOneAndDelete({ _id: id }).then((usuario) => {
             if(!usuario){
                 return { message: 'Usuário não encontrado.'}
             };
@@ -106,15 +126,16 @@ UsuarioSchema.static({
     },
 
     //realiza a autenticação do usuário
-    authenticate: async function(data){
+    login: async function(data){
         const { email, senha } = data;
+
         //valida os dados
         if(email == null || senha == null || email == undefined || senha == undefined){
-            return { message: 'Dados inválidos' };
+            return { message: 'O e-mail e senha são obrigatórios.' };
         }
 
         //verifica se o usuário existe
-        const usuario = await this.findOne({ email });
+        const usuario = await this.findOne({ email: email });
         if(!usuario){
             return { message: 'Usuário não encontrado.' };
         }else if(bcrypt.compareSync(senha, usuario.senha)){
@@ -125,7 +146,7 @@ UsuarioSchema.static({
                     nome,
                     email
                 },
-                token: jwt.sign({ _id }, authConfig.secret, { expiresIn: authConfig.expiresIn })
+                token: jwt.sign({ usuario }, authConfig.secret, { expiresIn: authConfig.expiresIn })
             };
         }else{
             return { message: 'Senha incorreta.' };

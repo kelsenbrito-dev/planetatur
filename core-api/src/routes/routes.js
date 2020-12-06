@@ -9,8 +9,9 @@ routes.get('/', (req, res) => {
 });
 
 //Usuário
-routes.post('/usuario/authenticate', UsuarioController.authenticate);
+routes.post('/usuario/login', UsuarioController.login);
 routes.use(authMiddleware); //obrigatório a validação do token a partir daqui
+routes.get('/usuario/session', UsuarioController.session);
 routes.get('/usuario', UsuarioController.index);
 routes.get('/usuario/:id', UsuarioController.show);
 routes.post('/usuario', UsuarioController.store);
