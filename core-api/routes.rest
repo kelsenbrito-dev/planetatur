@@ -1,8 +1,8 @@
 @baseUrl = http://localhost:3333
-@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c3VhcmlvIjp7InJvb3QiOnRydWUsIl9pZCI6IjVmY2M0YmJlYTVmMTZmMmZmY2IwNGFlZiIsIm5vbWUiOiJLZWxzZW4gQnJpdG8iLCJlbWFpbCI6ImtlbHNlbi5icml0b0BnbWFpbC5jb20iLCJzZW5oYSI6IiQyYSQwOCRFU3F6ZkVLbDNsM0xnaTBEbFBFQnBlRERySmZJZ2pLaHV3UVBjSjR0bDQ0WnhuZUtZMHZ3eSIsIl9fdiI6MH0sImlhdCI6MTYwNzI5NDM2MCwiZXhwIjoxNjA3Mjk3OTYwfQ.4GCsM8Ej4kGWedfEMAS_b9-doEMR2IRo18igBXmcpfw
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c3VhcmlvIjp7InRlbmFudCI6eyJfaWQiOiI1ZmNkOGYwMDFlNWIxYzM2ZWMzZjFiYTkiLCJub21lIjoiUGxhbmV0YVR1ciBWaWFnZW5zIn0sInJvb3QiOnRydWUsIl9pZCI6IjVmY2M0YmJlYTVmMTZmMmZmY2IwNGFlZiIsIm5vbWUiOiJLZWxzZW4gQnJpdG8iLCJlbWFpbCI6ImtlbHNlbi5icml0b0BnbWFpbC5jb20iLCJzZW5oYSI6IiQyYSQwOCRFU3F6ZkVLbDNsM0xnaTBEbFBFQnBlRERySmZJZ2pLaHV3UVBjSjR0bDQ0WnhuZUtZMHZ3eSIsIl9fdiI6MH0sImlhdCI6MTYwNzM3ODg4MCwiZXhwIjoxNjA3NDY1MjgwfQ.FWEsgngimAtac2a5iJtEtpXsVHHa91ONrEgNEoTl3so
 @idUsuario = 5fcc4bb7a5f16f2ffcb04aee
 
-### index usuario
+### token usuario
 GET {{baseUrl}}/usuario/session
 Authorization: Bearer {{token}}
 
@@ -10,16 +10,13 @@ Authorization: Bearer {{token}}
 GET {{baseUrl}}/usuario
 Authorization: Bearer {{token}}
 
-
 ### show usuario
 GET {{baseUrl}}/usuario/{{idUsuario}}
 Authorization: Bearer {{token}}
 
-
 ### delete usuario
 DELETE {{baseUrl}}/usuario/{{idUsuario}}
 Authorization: Bearer {{token}}
-
 
 ### criar usuário
 POST {{baseUrl}}/usuario
@@ -27,33 +24,162 @@ Authorization: Bearer {{token}}
 Content-Type: application/json
 
 {
-    "nome": "Tati Veil",
-    "email": "tativeil@gmail.com",
-    "senha": "123456"
+    "nome": "Geraldo Brito",
+    "email": "geraldo.brito@gmail.com",
+    "senha": "123456",
+    "perfil": {
+            "_id": "5fcea06685ac132a40809f44",
+            "nome": "Vendedor"
+    }
 }
 
 
-### alterar usuário
+### alterar usuário vendedor
 PUT {{baseUrl}}/usuario
 Authorization: Bearer {{token}}
 Content-Type: application/json
 
 {
-    "_id": "5fcc4bb7a5f16f2ffcb04aee",
-    "nome": "Tati Veil",
-    "email": "tativeil@gmail.com",
+    "id": "5fcea5e4cbcda71e3cd050d3",
+    "nome": "Geraldo Brito",
+    "email": "geraldo.brito@gmail.com",
     "senha": "123456",
+    "perfil": {
+            "_id": "5fcea06685ac132a40809f44",
+            "nome": "Vendedor"
+    },
+    "tenant": {
+            "_id": "5fcd8f001e5b1c36ec3f1ba9",
+            "nome": "PlanetaTur Viagens"
+    },
     "root": false
 }
 
+### alterar usuário parceiro
+PUT {{baseUrl}}/usuario
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+    "id": "5fcc4bc8a5f16f2ffcb04af0",
+    "nome": "Giovanna Brito",
+    "email": "giovanna.brito@gmail.com",
+    "senha": "123456",
+    "perfil": {
+            "_id": "5fce3fc78a84a11d9c3485d4",
+            "nome": "Parceiro"
+    },
+    "parceiro": {
+            "_id": "5fcea10885ac132a40809f45",
+            "nome": "Viaja Turismo"
+    },
+    "tenant": {
+            "_id": "5fcd8f001e5b1c36ec3f1ba9",
+            "nome": "PlanetaTur Viagens"
+    },
+    "root": false
+}
+
+### alterar usuário funcionário
+PUT {{baseUrl}}/usuario
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+    "id": "5fce516896ae5e0ae8c5dc85",
+    "nome": "Tati Veil",
+    "email": "tativeil@gmail.com",
+    "senha": "123456",
+    "perfil": {
+            "_id": "5fce3fc08a84a11d9c3485d3",
+            "nome": "Funcionário"
+    },
+    "tenant": {
+            "_id": "5fcd8f001e5b1c36ec3f1ba9",
+            "nome": "PlanetaTur Viagens"
+    },
+    "root": false
+}
 
 ### authenticate
 POST {{baseUrl}}/usuario/login
 Content-Type: application/json
 
 {
-    "email": "giovanna.brito@gmail.com",
+    "email": "kelsen.brito@gmail.com",
     "senha": "123456"
 }
+#######################################
+@idEmpresa = 5fcd62dc46944527f041bbb0
 
+### index empresa
+GET {{baseUrl}}/empresa
+Authorization: Bearer {{token}}
 
+### show empresa
+GET {{baseUrl}}/empresa/{{idEmpresa}}
+Authorization: Bearer {{token}}
+
+### delete empresa
+DELETE {{baseUrl}}/empresa/{{idEmpresa}}
+Authorization: Bearer {{token}}
+
+### criar empresa
+POST {{baseUrl}}/empresa
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+    "nome": "Viaja Turismo",
+    "cnpj": "11111111111111"
+}
+
+### alterar empresa
+PUT {{baseUrl}}/empresa
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "id": "5fcd62dc46944527f041bbb0",
+  "nome": "PlanetaTur Viagens",
+  "cnpj": "00000000000000",
+  "__v": 0
+}
+
+#######################################
+@idPerfil = 5fcd62dc46944527f041bbb0
+
+### index perfil
+GET {{baseUrl}}/perfil
+Authorization: Bearer {{token}}
+
+### show perfil
+GET {{baseUrl}}/perfil/{{idPerfil}}
+Authorization: Bearer {{token}}
+
+### delete perfil
+DELETE {{baseUrl}}/perfil/{{idPerfil}}
+Authorization: Bearer {{token}}
+
+### criar perfil
+POST {{baseUrl}}/perfil
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+    "nome": "Vendedor",
+    "descricao": "Vendedores da empresa"
+}
+
+### alterar perfil
+PUT {{baseUrl}}/perfil
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "id": "5fce3fc78a84a11d9c3485d4",
+  "nome": "Parceiro",
+  "descricao": "Funcionários de empresas parceiras na venda de serviços."
+}
+
+#######################################

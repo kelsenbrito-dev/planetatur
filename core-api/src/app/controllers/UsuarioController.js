@@ -20,7 +20,7 @@ class UsuarioController{
 
     //método para manuteção dos dados do usuário
     async store(req, res){
-        return res.json(await Usuario.store(req.body));
+        return res.json(await Usuario.store(req.body, req.token));
     }
 
     //método para manuteção dos dados do usuário

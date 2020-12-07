@@ -1,7 +1,4 @@
 import { Schema, model} from 'mongoose';
-import jwt from 'jsonwebtoken'
-import bcrypt from 'bcryptjs';
-import authConfig from '../../config/auth';
 
 /** Schema para negócios relacionados a empresa **/
 const EmpresaSchema = new Schema({
@@ -49,10 +46,10 @@ EmpresaSchema.static({
     //realiza a manutenção dos dados da empresa
     store: async function(data){
         try {
-            const { cpnj } = data;
+            const { cnpj } = data;
 
             //valida se já existe o empresa
-            const empresa = await this.findOne({ cpnj });
+            const empresa = await this.findOne({ cnpj: cnpj });
             if(empresa){
                 return { message: 'Empresa já cadastrada.'};
             }
@@ -67,9 +64,9 @@ EmpresaSchema.static({
     //realiza a manutenção dos dados da empresa
     update: async function(data){
         try {
-            const { id } = data;
-            if(id){
-                return await this.findOneAndUpdate({ _id: id }, data, { new : true }).then((empresa) => {
+            const { _id } = data;
+            if(_id){
+                return await this.findOneAndUpdate({ _id: _id }, data, { new : true }).then((empresa) => {
                     if(!empresa){
                         return { message: 'Empresa não encontrada.'}
                     };

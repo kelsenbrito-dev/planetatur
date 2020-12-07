@@ -15,7 +15,8 @@ class App{
         mongoose.connect(process.env.DATABASE_CONNECTION,{
             useNewUrlParser: true,
             useUnifiedTopology: true,
-            useFindAndModify: false
+            useFindAndModify: false,
+            useCreateIndex: true
         });
         const db = mongoose.connection;
         db.on('error', (err) => console.log(err));

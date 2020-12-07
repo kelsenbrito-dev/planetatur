@@ -4,18 +4,46 @@ import bcrypt from 'bcryptjs';
 import authConfig from '../../config/auth';
 
 /** Schema para negócios relacionados ao usuário **/
-const UsuarioSchema = new Schema({
+const usuarioSchema = new Schema({
     nome: {
         type: String,
         required: [true, 'Informe o nome do usuário']
     },
     email: {
         type: String,
-        required: [true, 'Informe o e-mail do usuário']
+        required: [true, 'Informe o e-mail do usuário'],
+        index: true,
+        unique: true
     },
     senha: {
         type: String,
         required: [true, 'Informe a senha do usuário']
+    },
+    perfil: {
+        _id: {
+            type: Schema.Types.ObjectId,
+            ref: 'Perfil',
+            required: [true, 'Informe perfil do usuário']
+        },
+        nome: {
+            type: String
+        },
+    },
+    //no caso de parceiro a empresa é obrigatória
+    parceiro: {
+        _id: {
+            type: Schema.Types.ObjectId,
+            ref: 'Empresa'
+        },
+        nome: String
+    },
+    tenant: {
+        _id: {
+            type: Schema.Types.ObjectId,
+            ref: 'Empresa',
+            required: [true, 'Informe a tenant do usuário']
+        },
+        nome: String
     },
     root: {
         type: Boolean,
@@ -24,10 +52,10 @@ const UsuarioSchema = new Schema({
 });
 
 //local para criação de métodos
-UsuarioSchema.method({});
+usuarioSchema.method({});
 
 //local para criação de métodos estáticos
-UsuarioSchema.static({
+usuarioSchema.static({
 
     //recupera todos os usuários
     index: async function(){
@@ -50,12 +78,12 @@ UsuarioSchema.static({
             };
             return usuario;
         }).catch((error) => {
-            return error;
+            return { message: error.message};
         });
     },
 
     //realiza a manutenção dos dados do usuário
-    store: async function(data){
+    store: async function(data, token){
         try {
             const { email } = data;
 
@@ -68,41 +96,55 @@ UsuarioSchema.static({
             //cria o hash para a senha
             data.senha = await bcrypt.hash(data.senha, 8);
 
+            //recupera o tenant do cadastrador
+            data.tenant = token.tenant;
+
             //grava o usuário
-            return await this.create(data);
+            return await this.create(data).then((usuario)=>{
+                return usuario;
+            }).catch((error) => {
+                return { message: error.message};
+            });
         } catch (error) {
-            return error;
+            return { message: error.message};
         }
     },
 
     //realiza a manutenção dos dados do usuário
     update: async function(data, token){
         try {
+            const { id } = data;
+
+            //valida o identificador
+            if(id == null || id == undefined){
+                return { message: 'O identificador do usuário é obrigatório' };
+            }
+
+            //verificar se o usuário da ação é root
+            if(!token.root){
+                data = {
+                    _id: data.id,
+                    nome: data.nome,
+                    email: data.email,
+                    senha: data.senha,
+                    tipo: data.tipo
+                };
+            }
+
             //cria o hash para a senha
             data.senha = await bcrypt.hash(data.senha, 8);
-            if(data._id){
-                //valida se o usuário é root para alterar atributo root
-                if(!token.root){
-                    data = {
-                        _id: data._id,
-                        nome: data.nome,
-                        email: data.email,
-                        senha: data.senha
-                    };
-                }
 
-                return await this.findOneAndUpdate({ _id : data._id }, data, { new : true }).then((usuario) => {
-                    if(!usuario){
-                        return { message: 'Usuário não encontrado.'}
-                    };
-                    return usuario;
-                }).catch((error) => {
-                    return error;
-                });
-            }
-            return { message: 'O identificador do usuário é obrigatório' };
+            //realiza a atualização
+            return await this.findOneAndUpdate({ _id : data.id }, data, { new : true }).then((usuario) => {
+                if(!usuario){
+                    return { message: 'Usuário não encontrado.'}
+                };
+                return usuario;
+            }).catch((error) => {
+                return { message: error.message};
+            });
         } catch (error) {
-            return error;
+            return { message: error.message};
         }
     },
 
@@ -121,7 +163,7 @@ UsuarioSchema.static({
             };
             return { message: 'Usuário excluído com sucesso.'}
         }).catch((error) => {
-            return error;
+            return { message: error.message};
         });
     },
 
@@ -139,12 +181,13 @@ UsuarioSchema.static({
         if(!usuario){
             return { message: 'Usuário não encontrado.' };
         }else if(bcrypt.compareSync(senha, usuario.senha)){
-            const { _id, nome, email } = usuario;
+            const { _id, nome, email, tenant } = usuario;
             return {
                 usuario: {
                     _id,
                     nome,
-                    email
+                    email,
+                    tenant
                 },
                 token: jwt.sign({ usuario }, authConfig.secret, { expiresIn: authConfig.expiresIn })
             };
@@ -155,4 +198,4 @@ UsuarioSchema.static({
 
 });
 
-export default model('Usuario', UsuarioSchema)
+export default model('Usuario', usuarioSchema)
